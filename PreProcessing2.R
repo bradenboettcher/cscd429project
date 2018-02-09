@@ -2,7 +2,7 @@ train <- read.csv('train.csv', stringsAsFactors = F, header = T)
 test <- read.csv('test.csv', stringsAsFactors = F, header = T)
 
 test$PassengerId <- NULL
-train$ï..PassengerId <- NULL
+train$PassengerId <- NULL
 test.survived <- data.frame(Survived = rep("NA", nrow(test)), test[,])
 
 data.combined <- rbind(train, test.survived)
@@ -91,3 +91,5 @@ portC <- data.combined[which(data.combined$Embarked == "C"),]
 masters <- data.combined[which(str_detect(data.combined$Name, "Master.")),]
 
 noCabin <- data.combined[which(data.combined$Cabin == ""),]
+
+
