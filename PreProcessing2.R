@@ -11,6 +11,13 @@ str(data.combined)
 
 data.combined$Survived <- as.factor(data.combined$Survived)
 data.combined$Pclass <- as.factor(data.combined$Pclass)
+data.combined$Sex <- as.factor(data.combined$Sex)
+
+train$Survived <- as.factor(train$Survived)
+
+train$Sex <- as.factor(train$Sex)
+
+
 
 table(data.combined$Survived)
 
@@ -74,6 +81,15 @@ for(i in 1:nrow(data.combined))
 
 data.combined$Title <- as.factor(titles)
 
+titles <- NULL
+for(i in 1:nrow(train))
+{
+  titles <- c(titles, extractTitle(train[i, "Name"]))
+}
+
+train$Title <- as.factor(titles)
+
+
 ggplot(data.combined[1:891, ], aes(x = Title, fill = Survived)) + 
   stat_count(width = .5) + 
   facet_wrap(~Pclass) + 
@@ -83,13 +99,19 @@ ggplot(data.combined[1:891, ], aes(x = Title, fill = Survived)) +
   labs(fill = "Survived")
 
 
-children <- data.combined[which(data.combined$Age < 18),]
-children[1:5,]
+library(party)
+fol <- formula(Survived ~ Pclass+ Age + Sex )
+tree <- ctree(fol, data = train)
+plot(tree)
 
-portC <- data.combined[which(data.combined$Embarked == "C"),]
+fol <- formula(Survived ~ Sex + Title + Age)
+tree <- ctree(fol, data = train)
+plot(tree)
 
-masters <- data.combined[which(str_detect(data.combined$Name, "Master.")),]
+fol <- formula(Survived ~ Sex + Title)
+tree <- ctree(fol, data = train)
+plot(tree)
 
-noCabin <- data.combined[which(data.combined$Cabin == ""),]
-
-
+fol <- formula(Survived ~ Title)
+tree <- ctree(fol, data = train)
+plot(tree)
